@@ -1,16 +1,61 @@
 import UIKit
 import LBTATools
+import MapKit
 
-class LocationCell: LBTAListCell<String> {
+class LocationCell: LBTAListCell<MKMapItem> {
+    override var item: MKMapItem! {
+        didSet {
+            label.text = item.name
+            address.text = item.address
+            coordinate.text = "\(item.placemark.coordinate.latitude), \(item.placemark.coordinate.longitude)"
+        }
+    }
+    let label = UILabel(text: "Location", font: .boldSystemFont(ofSize: 16))
+    let address = UILabel(text: "Address", numberOfLines: 0)
+    let coordinate = UILabel(text: "coordinate")
     override func setupViews() {
         backgroundColor = .white
         layer.cornerRadius = 10
         setupShadow(opacity: 0.2, radius: 5, offset: .zero, color: .black)
+        stack(label, address, coordinate)
+            .withMargins(.allSides(16))
     }
 }
 
-class LocationsCarouselController: LBTAListController<LocationCell, String>, UICollectionViewDelegateFlowLayout {
+class LocationsCarouselController: LBTAListController<LocationCell, MKMapItem> {
     
+    weak var mainController: ViewController?
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let itemMap = items[indexPath.item]
+        
+        if let annotations = mainController?.mapView.annotations {
+            annotations.forEach { annotation in
+                if annotation.title == itemMap.name {
+                    mainController?.mapView.selectAnnotation(annotation, animated: true)
+                }
+            }
+        }
+        if var region = mainController?.mapView.region {
+            region.center = itemMap.placemark.coordinate
+            self.mainController?.mapView.setRegion(region, animated: true)
+        }
+        
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        collectionView.clipsToBounds = false
+        collectionView.backgroundColor = .clear
+        
+//        let placemark = MKPlacemark(coordinate: .init(latitude: 10, longitude: 50))
+//        let dummyMapItem = MKMapItem(placemark: placemark)
+//        dummyMapItem.name = "Dummy"
+//        self.items = [dummyMapItem]
+    }
+}
+
+extension LocationsCarouselController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         .init(top: 0, left: 16, bottom: 0, right: 16)
     }
@@ -20,11 +65,5 @@ class LocationsCarouselController: LBTAListController<LocationCell, String>, UIC
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         12
-    }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        collectionView.clipsToBounds = false
-        collectionView.backgroundColor = .clear
-        self.items = ["one", "two", "three"]
     }
 }

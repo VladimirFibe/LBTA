@@ -28,6 +28,7 @@ class ViewController: UIViewController {
     let locationsController = LocationsCarouselController(scrollDirection: .horizontal)
     
     fileprivate func setupLocationsCarousel() {
+        locationsController.mainController = self
         let locationView = locationsController.view!
         view.addSubview(locationView)
         locationView.anchor(
@@ -84,14 +85,18 @@ class ViewController: UIViewController {
                 return
             }
             self.mapView.removeAnnotations(self.mapView.annotations)
+            self.locationsController.items.removeAll()
             response?.mapItems.forEach({ mapItem in
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = mapItem.placemark.coordinate
                 annotation.title = mapItem.name
                 annotation.subtitle = mapItem.address
                 self.mapView.addAnnotation(annotation)
+                self.locationsController.items.append(mapItem)
             })
-            print(self.mapView.annotations.count)
+//            if !self.locationsController.items.isEmpty {
+//                self.locationsController.collectionView.scrollToItem(at: [0, 0], at: .centeredHorizontally, animated: true)
+//            }
             self.mapView.showAnnotations(self.mapView.annotations, animated: true)
         }
     }
