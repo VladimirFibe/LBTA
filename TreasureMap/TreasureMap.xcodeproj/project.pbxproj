@@ -11,6 +11,7 @@
 		02BBF0F2296133FB0008AEB6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBF0F1296133FB0008AEB6 /* ViewController.swift */; };
 		02BBF0F7296133FD0008AEB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02BBF0F6296133FD0008AEB6 /* Assets.xcassets */; };
 		02BBF0FA296133FD0008AEB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02BBF0F8296133FD0008AEB6 /* LaunchScreen.storyboard */; };
+		02BBF10329613F700008AEB6 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 02BBF10229613F700008AEB6 /* LBTATools */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02BBF10329613F700008AEB6 /* LBTATools in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +79,9 @@
 			dependencies = (
 			);
 			name = TreasureMap;
+			packageProductDependencies = (
+				02BBF10229613F700008AEB6 /* LBTATools */,
+			);
 			productName = TreasureMap;
 			productReference = 02BBF0EA296133FB0008AEB6 /* TreasureMap.app */;
 			productType = "com.apple.product-type.application";
@@ -105,6 +110,9 @@
 				Base,
 			);
 			mainGroup = 02BBF0E1296133FB0008AEB6;
+			packageReferences = (
+				02BBF10129613F700008AEB6 /* XCRemoteSwiftPackageReference "LBTATools" */,
+			);
 			productRefGroup = 02BBF0EB296133FB0008AEB6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -340,6 +348,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		02BBF10129613F700008AEB6 /* XCRemoteSwiftPackageReference "LBTATools" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bhlvoong/LBTATools.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		02BBF10229613F700008AEB6 /* LBTATools */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02BBF10129613F700008AEB6 /* XCRemoteSwiftPackageReference "LBTATools" */;
+			productName = LBTATools;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 02BBF0E2296133FB0008AEB6 /* Project object */;
 }
