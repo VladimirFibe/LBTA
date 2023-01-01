@@ -22,6 +22,21 @@ class ViewController: UIViewController {
         mapView.fillSuperview()
         setupRegionForMap()
         setupSearchUI()
+        setupLocationsCarousel()
+    }
+    
+    let locationsController = LocationsCarouselController(scrollDirection: .horizontal)
+    
+    fileprivate func setupLocationsCarousel() {
+        let locationView = locationsController.view!
+        view.addSubview(locationView)
+        locationView.anchor(
+            top: nil,
+            leading: view.leadingAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            trailing: view.trailingAnchor,
+//            padding: .init(top: 0, left: 16, bottom: 0, right: 16),
+            size: .init(width: 0, height: 150))
     }
     
     fileprivate func setupSearchUI() {
