@@ -10,6 +10,7 @@
 		02A943C12962B07E0045AF9E /* MKMapItem+Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A943C02962B07E0045AF9E /* MKMapItem+Address.swift */; };
 		02A943C32962B1550045AF9E /* CustomMapItemAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A943C22962B1550045AF9E /* CustomMapItemAnnotation.swift */; };
 		02A943C72962BB600045AF9E /* DirectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A943C62962BB600045AF9E /* DirectionsViewController.swift */; };
+		02A943C92962E3860045AF9E /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A943C82962E3860045AF9E /* UIColor+Extension.swift */; };
 		02BBF0EE296133FB0008AEB6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBF0ED296133FB0008AEB6 /* AppDelegate.swift */; };
 		02BBF0F2296133FB0008AEB6 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBF0F1296133FB0008AEB6 /* MainController.swift */; };
 		02BBF0F7296133FD0008AEB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02BBF0F6296133FD0008AEB6 /* Assets.xcassets */; };
@@ -23,6 +24,7 @@
 		02A943C02962B07E0045AF9E /* MKMapItem+Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapItem+Address.swift"; sourceTree = "<group>"; };
 		02A943C22962B1550045AF9E /* CustomMapItemAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapItemAnnotation.swift; sourceTree = "<group>"; };
 		02A943C62962BB600045AF9E /* DirectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsViewController.swift; sourceTree = "<group>"; };
+		02A943C82962E3860045AF9E /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		02BBF0EA296133FB0008AEB6 /* TreasureMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TreasureMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02BBF0ED296133FB0008AEB6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		02BBF0F1296133FB0008AEB6 /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				02A943C42962BB0B0045AF9E /* Directions */,
 				02A943C02962B07E0045AF9E /* MKMapItem+Address.swift */,
 				02A943C22962B1550045AF9E /* CustomMapItemAnnotation.swift */,
+				02A943C82962E3860045AF9E /* UIColor+Extension.swift */,
 				02BBF0F6296133FD0008AEB6 /* Assets.xcassets */,
 				02BBF0F8296133FD0008AEB6 /* LaunchScreen.storyboard */,
 				02BBF0FB296133FD0008AEB6 /* Info.plist */,
@@ -171,6 +174,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02A943C92962E3860045AF9E /* UIColor+Extension.swift in Sources */,
 				02A943C12962B07E0045AF9E /* MKMapItem+Address.swift in Sources */,
 				02A943C32962B1550045AF9E /* CustomMapItemAnnotation.swift in Sources */,
 				02CF3A642961F9A000608E5F /* LocationsCarouselController.swift in Sources */,

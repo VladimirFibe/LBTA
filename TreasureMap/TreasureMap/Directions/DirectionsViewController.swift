@@ -7,7 +7,7 @@ class DirectionsViewController: UIViewController {
 
     let mapView = MKMapView()
     
-    let navBar = UIView(backgroundColor: .blue)
+    let navBar = UIView(backgroundColor: .brandBlue)
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBarUI()
@@ -38,7 +38,7 @@ class DirectionsViewController: UIViewController {
         
         let endingPlacemark = MKPlacemark(coordinate: last.coordinate)
         request.destination = .init(placemark: endingPlacemark)
-        
+        request.transportType = .walking
         let directions = MKDirections(request: request)
         directions.calculate { response, error in
             if let error = error {
@@ -48,6 +48,7 @@ class DirectionsViewController: UIViewController {
             guard let route = response?.routes.first else { return }
             self.mapView.addOverlay(route.polyline)
             print("DEBUG: Yesss!!!")
+            print("DEBUG: \(route.expectedTravelTime / 3600)")
         }
     }
     
@@ -86,7 +87,7 @@ class DirectionsViewController: UIViewController {
 extension DirectionsViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let polylineRenderer = MKPolylineRenderer(overlay: overlay)
-        polylineRenderer.strokeColor = .red
+        polylineRenderer.strokeColor = .brandBlue
         polylineRenderer.lineWidth = 5
         return polylineRenderer
     }
