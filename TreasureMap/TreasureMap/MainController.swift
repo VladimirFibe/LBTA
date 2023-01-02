@@ -4,28 +4,37 @@ import LBTATools
 import SwiftUI
 import Combine
 
-class ViewController: UIViewController {
+class MainController: UIViewController {
     private var bag = Set<AnyCancellable>()
     let mapView = MKMapView()
     
     let searchTextField = UITextField(placeholder: "Search query")
     
+    
+    let locationsController = LocationsCarouselController(scrollDirection: .horizontal)
+    let locationManager = CLLocationManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        requestUserLocation()
         setupMap()
+    }
+    
+    fileprivate func requestUserLocation() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.delegate = self
     }
     
     func setupMap() {
         view.addSubview(mapView)
         mapView.mapType = .standard
         mapView.delegate = self
+        mapView.showsUserLocation = true
         mapView.fillSuperview()
         setupRegionForMap()
         setupSearchUI()
         setupLocationsCarousel()
     }
-    
-    let locationsController = LocationsCarouselController(scrollDirection: .horizontal)
     
     fileprivate func setupLocationsCarousel() {
         locationsController.mainController = self
@@ -127,11 +136,11 @@ class ViewController: UIViewController {
 }
 
 struct ViewControllerRepresentable: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> ViewController {
-        ViewController()
+    func makeUIViewController(context: Context) -> MainController {
+        MainController()
     }
     
-    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: MainController, context: Context) {
     }
 }
 
@@ -142,11 +151,11 @@ struct ViewController_Previews: PreviewProvider {
     }
 }
 
-extension ViewController: MKMapViewDelegate {
+extension MainController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard !(annotation is MKUserLocation) else { return nil }
         let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
         annotationView.canShowCallout = true
-//        annotationView.image = #imageLiteral(resourceName: "tourist")
         return annotationView
     }
 }
@@ -173,5 +182,24 @@ extension MKMapItem {
             address += country
         }
         return address
+    }
+}
+
+extension MainController: CLLocationManagerDelegate {
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse:
+            locationManager.startUpdatingLocation()
+        default:
+            print("Failed to authorize")
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.first else { return }
+        mapView.setRegion(.init(center: location.coordinate,
+                                span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1)), animated: false)
+        locationManager.stopUpdatingLocation()
     }
 }

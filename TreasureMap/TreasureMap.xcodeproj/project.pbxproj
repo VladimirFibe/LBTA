@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		02BBF0EE296133FB0008AEB6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBF0ED296133FB0008AEB6 /* AppDelegate.swift */; };
-		02BBF0F2296133FB0008AEB6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBF0F1296133FB0008AEB6 /* ViewController.swift */; };
+		02BBF0F2296133FB0008AEB6 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBF0F1296133FB0008AEB6 /* MainController.swift */; };
 		02BBF0F7296133FD0008AEB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02BBF0F6296133FD0008AEB6 /* Assets.xcassets */; };
 		02BBF0FA296133FD0008AEB6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02BBF0F8296133FD0008AEB6 /* LaunchScreen.storyboard */; };
 		02BBF10329613F700008AEB6 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 02BBF10229613F700008AEB6 /* LBTATools */; };
@@ -18,7 +18,7 @@
 /* Begin PBXFileReference section */
 		02BBF0EA296133FB0008AEB6 /* TreasureMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TreasureMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02BBF0ED296133FB0008AEB6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		02BBF0F1296133FB0008AEB6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		02BBF0F1296133FB0008AEB6 /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
 		02BBF0F6296133FD0008AEB6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		02BBF0F9296133FD0008AEB6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		02BBF0FB296133FD0008AEB6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -59,7 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				02BBF0ED296133FB0008AEB6 /* AppDelegate.swift */,
-				02BBF0F1296133FB0008AEB6 /* ViewController.swift */,
+				02BBF0F1296133FB0008AEB6 /* MainController.swift */,
 				02CF3A632961F9A000608E5F /* LocationsCarouselController.swift */,
 				02BBF0F6296133FD0008AEB6 /* Assets.xcassets */,
 				02BBF0F8296133FD0008AEB6 /* LaunchScreen.storyboard */,
@@ -145,7 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				02CF3A642961F9A000608E5F /* LocationsCarouselController.swift in Sources */,
-				02BBF0F2296133FB0008AEB6 /* ViewController.swift in Sources */,
+				02BBF0F2296133FB0008AEB6 /* MainController.swift in Sources */,
 				02BBF0EE296133FB0008AEB6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -288,6 +288,7 @@
 				DEVELOPMENT_TEAM = 723HTEFHBA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TreasureMap/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We want your location!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -315,6 +316,7 @@
 				DEVELOPMENT_TEAM = 723HTEFHBA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TreasureMap/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We want your location!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

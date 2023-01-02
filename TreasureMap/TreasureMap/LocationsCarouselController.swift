@@ -24,7 +24,7 @@ class LocationCell: LBTAListCell<MKMapItem> {
 
 class LocationsCarouselController: LBTAListController<LocationCell, MKMapItem> {
     
-    weak var mainController: ViewController?
+    weak var mainController: MainController?
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let itemMap = items[indexPath.item]
