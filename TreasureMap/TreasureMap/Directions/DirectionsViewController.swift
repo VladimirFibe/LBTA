@@ -102,11 +102,7 @@ class DirectionsViewController: UIViewController {
     }
     
     @objc fileprivate func handleChangeStartLocation() {
-        let vc = UIViewController()
-        let button = UIButton(title: "Back", titleColor: .black, font: .boldSystemFont(ofSize: 14), backgroundColor: .clear, target: self, action: #selector(handleBack))
-        vc.view.backgroundColor = .yellow
-        vc.view.addSubview(button)
-        button.fillSuperview()
+        let vc = LocationSearchController()
         navigationController?.pushViewController(vc, animated: true)
     }
     
