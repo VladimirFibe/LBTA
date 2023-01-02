@@ -10,7 +10,6 @@ class MainController: UIViewController {
     
     let searchTextField = UITextField(placeholder: "Search query")
     
-    
     let locationsController = LocationsCarouselController(scrollDirection: .horizontal)
     let locationManager = CLLocationManager()
     
@@ -45,7 +44,6 @@ class MainController: UIViewController {
             leading: view.leadingAnchor,
             bottom: view.safeAreaLayoutGuide.bottomAnchor,
             trailing: view.trailingAnchor,
-//            padding: .init(top: 0, left: 16, bottom: 0, right: 16),
             size: .init(width: 0, height: 150))
     }
     
@@ -67,14 +65,9 @@ class MainController: UIViewController {
             object: searchTextField)
             .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
             .sink { result in
-                print(result.name, "111222333")
                 self.performLocalSearch()
             }
             .store(in: &bag)
-        
-//        searchTextField.addTarget(self,
-//                                  action: #selector(handleSearchChanges),
-//                                  for: .editingChanged)
     }
     
     @objc fileprivate func handleSearchChanges() {
@@ -96,9 +89,10 @@ class MainController: UIViewController {
             self.mapView.removeAnnotations(self.mapView.annotations)
             self.locationsController.items.removeAll()
             response?.mapItems.forEach({ mapItem in
-                let annotation = MKPointAnnotation()
+                let annotation = CustomMapItemAnnotation()
+                annotation.mapItem = mapItem
                 annotation.coordinate = mapItem.placemark.coordinate
-                annotation.title = mapItem.name
+                annotation.title = "Location: " + (mapItem.name ?? "")
                 annotation.subtitle = mapItem.address
                 self.mapView.addAnnotation(annotation)
                 self.locationsController.items.append(mapItem)
@@ -111,7 +105,6 @@ class MainController: UIViewController {
     }
     
     fileprivate func setupRegionForMap() {
-//        let coordinateNewYork = CLLocationCoordinate2D(latitude: 40.783466, longitude: -73.971266)
         let coordinateSanFrancisco = CLLocationCoordinate2D(latitude: 37.766610, longitude: -122.427290)
         let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         let region = MKCoordinateRegion(center: coordinateSanFrancisco, span: span)
@@ -135,22 +128,6 @@ class MainController: UIViewController {
     }
 }
 
-struct ViewControllerRepresentable: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> MainController {
-        MainController()
-    }
-    
-    func updateUIViewController(_ uiViewController: MainController, context: Context) {
-    }
-}
-
-struct ViewController_Previews: PreviewProvider {
-    static var previews: some View {
-        ViewControllerRepresentable()
-            .ignoresSafeArea()
-    }
-}
-
 extension MainController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !(annotation is MKUserLocation) else { return nil }
@@ -158,30 +135,13 @@ extension MainController: MKMapViewDelegate {
         annotationView.canShowCallout = true
         return annotationView
     }
-}
-
-extension MKMapItem {
-    var address: String {
-        var address = ""
-        if let subThoroughfare = placemark.subThoroughfare {
-            address += subThoroughfare + " "
-        }
-        if let thoroughfare = placemark.thoroughfare {
-            address += thoroughfare + ", "
-        }
-        if let postalCode = placemark.postalCode {
-            address += postalCode + ", "
-        }
-        if let locality = placemark.locality {
-            address += locality + ", "
-        }
-        if let administrativeArea = placemark.administrativeArea {
-            address += administrativeArea + ", "
-        }
-        if let country = placemark.country {
-            address += country
-        }
-        return address
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let annotation = view.annotation as? CustomMapItemAnnotation else { return }
+        guard let name = annotation.mapItem?.name else { return }
+        guard let index = self.locationsController.items.firstIndex(where: { $0.name == name }) else { return }
+        self.locationsController.collectionView.scrollToItem(at: [0, index], at: .centeredHorizontally, animated: true)
+                
     }
 }
 
@@ -196,10 +156,28 @@ extension MainController: CLLocationManagerDelegate {
         }
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager,
+                         didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
         mapView.setRegion(.init(center: location.coordinate,
-                                span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1)), animated: false)
+                                span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1)),
+                          animated: false)
         locationManager.stopUpdatingLocation()
+    }
+}
+
+struct ViewControllerRepresentable: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> MainController {
+        MainController()
+    }
+    
+    func updateUIViewController(_ uiViewController: MainController, context: Context) {
+    }
+}
+
+struct ViewController_Previews: PreviewProvider {
+    static var previews: some View {
+        ViewControllerRepresentable()
+            .ignoresSafeArea()
     }
 }

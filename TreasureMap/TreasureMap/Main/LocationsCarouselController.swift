@@ -31,7 +31,8 @@ class LocationsCarouselController: LBTAListController<LocationCell, MKMapItem> {
         
         if let annotations = mainController?.mapView.annotations {
             annotations.forEach { annotation in
-                if annotation.title == itemMap.name {
+                guard let customAnnotation = annotation as? CustomMapItemAnnotation else { return }
+                if customAnnotation.mapItem?.name == itemMap.name {
                     mainController?.mapView.selectAnnotation(annotation, animated: true)
                 }
             }
@@ -47,11 +48,6 @@ class LocationsCarouselController: LBTAListController<LocationCell, MKMapItem> {
         super.viewDidLoad()
         collectionView.clipsToBounds = false
         collectionView.backgroundColor = .clear
-        
-//        let placemark = MKPlacemark(coordinate: .init(latitude: 10, longitude: 50))
-//        let dummyMapItem = MKMapItem(placemark: placemark)
-//        dummyMapItem.name = "Dummy"
-//        self.items = [dummyMapItem]
     }
 }
 
