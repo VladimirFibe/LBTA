@@ -15,6 +15,8 @@ class PlacesViewController: UIViewController {
         view.addSubview(mapView)
         mapView.fillSuperview()
         mapView.showsUserLocation = true
+        mapView.delegate = self
+        
         locationManager.delegate = self
             requestForLocationAuthorization()
     }
@@ -28,7 +30,8 @@ class PlacesViewController: UIViewController {
             likelihoodList?.likelihoods.forEach({ likelihood in
                 print("DEBUG: \(likelihood.place.name ?? "")")
                 let place = likelihood.place
-                let annotation = MKPointAnnotation()
+                
+                let annotation = PlaceAnnotation(place: place)
                 annotation.title = place.name
                 annotation.coordinate = place.coordinate
                 self?.mapView.addAnnotation(annotation)
@@ -57,5 +60,33 @@ extension PlacesViewController: CLLocationManagerDelegate {
         mapView.setRegion(region, animated: true)
         findNearbyPlaces()
         locationManager.stopUpdatingLocation()
+    }
+}
+
+extension PlacesViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard let placeAnnotation = annotation as? PlaceAnnotation else { return nil }
+        let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
+        annotationView.canShowCallout = true
+        if let firstType = placeAnnotation.place.types?.first {
+            switch firstType {
+            case "bar": annotationView.image = #imageLiteral(resourceName: "bar")
+            case "restaurant": annotationView.image = #imageLiteral(resourceName: "restaurant")
+            case "point_of_interest": annotationView.image = #imageLiteral(resourceName: "restaurant")
+            default: annotationView.image = #imageLiteral(resourceName: "default")
+            }
+        }
+        return annotationView
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        
+    }
+}
+
+class PlaceAnnotation: MKPointAnnotation {
+    let place: GMSPlace
+    init(place: GMSPlace) {
+        self.place = place
     }
 }
