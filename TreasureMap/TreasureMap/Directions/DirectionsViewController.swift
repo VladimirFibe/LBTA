@@ -48,6 +48,7 @@ class DirectionsViewController: UIViewController {
         guard let route = currentlyShowingRoute else { return }
         let routesController = RoutesController()
         routesController.items = route.steps.filter{!$0.instructions.isEmpty}
+        routesController.route = route
         present(routesController, animated: true)
     }
     fileprivate func setupMap() {
