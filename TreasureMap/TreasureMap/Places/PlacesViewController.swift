@@ -8,6 +8,7 @@ class PlacesViewController: UIViewController {
     let mapView = MKMapView()
     let locationManager = CLLocationManager()
     let client = GMSPlacesClient()
+    var currentCustomCallout: UIView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,7 +81,59 @@ extension PlacesViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print("DEBUG: \(123)")
+    
+        currentCustomCallout?.removeFromSuperview()
+        let customCalloutContainer = UIView(backgroundColor: .white)
+        view.addSubview(customCalloutContainer)
+        customCalloutContainer.translatesAutoresizingMaskIntoConstraints = false
+        let widthAnchor = customCalloutContainer.widthAnchor.constraint(equalToConstant: 100)
+        let heightAnchor = customCalloutContainer.heightAnchor.constraint(equalToConstant: 50)
+        NSLayoutConstraint.activate([
+            widthAnchor,
+            heightAnchor,
+            customCalloutContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            customCalloutContainer.bottomAnchor.constraint(equalTo: view.topAnchor)
+        ])
+        customCalloutContainer.layer.borderColor = UIColor.darkGray.cgColor
+        customCalloutContainer.layer.borderWidth = 2
+        customCalloutContainer.setupShadow(opacity: 0.2, radius: 5, offset: .zero, color: .darkGray)
+        customCalloutContainer.layer.cornerRadius = 5
+        currentCustomCallout = customCalloutContainer
         
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.color = .darkGray
+        spinner.startAnimating()
+        customCalloutContainer.addSubview(spinner)
+        spinner.fillSuperview()
+        
+        guard let placeId = (view.annotation as? PlaceAnnotation)?.place.placeID else { return }
+        client.lookUpPhotos(forPlaceID: placeId) {[weak self] metadataList, error in
+            if let error = error {
+                print("DEBUG: \(error.localizedDescription)")
+                return
+            }
+            guard let firstPhotoMetadata = metadataList?.results.first else { return }
+            self?.client.loadPlacePhoto(firstPhotoMetadata) { uiImage, error in
+                if let error = error {
+                    print("DEBUG: \(error.localizedDescription)")
+                    return
+                }
+                guard let uiImage = uiImage else { return }
+                if uiImage.size.width > uiImage.size.height {
+                    let width = 300.0
+                    let height = uiImage.size.height * width / uiImage.size.width
+                    widthAnchor.constant = width
+                    heightAnchor.constant = height
+                }
+                DispatchQueue.main.async {
+                    spinner.stopAnimating()
+                    let imageView = UIImageView(image: uiImage, contentMode: .scaleAspectFill)
+                    customCalloutContainer.addSubview(imageView)
+                    imageView.fillSuperview()
+                }
+            }
+        }
     }
 }
 
