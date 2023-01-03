@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0245FF1929631C4F005DFBC9 /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0245FF1829631C4F005DFBC9 /* LocationSearchController.swift */; };
+		0245FF1C2963DDAB005DFBC9 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 0245FF1B2963DDAB005DFBC9 /* JGProgressHUD */; };
+		0245FF1E2963EF13005DFBC9 /* RoutesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0245FF1D2963EF13005DFBC9 /* RoutesController.swift */; };
 		02A943C12962B07E0045AF9E /* MKMapItem+Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A943C02962B07E0045AF9E /* MKMapItem+Address.swift */; };
 		02A943C32962B1550045AF9E /* CustomMapItemAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A943C22962B1550045AF9E /* CustomMapItemAnnotation.swift */; };
 		02A943C72962BB600045AF9E /* DirectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A943C62962BB600045AF9E /* DirectionsViewController.swift */; };
@@ -22,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		0245FF1829631C4F005DFBC9 /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
+		0245FF1D2963EF13005DFBC9 /* RoutesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesController.swift; sourceTree = "<group>"; };
 		02A943BD2962A6060045AF9E /* Almaty.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Almaty.gpx; sourceTree = "<group>"; };
 		02A943C02962B07E0045AF9E /* MKMapItem+Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapItem+Address.swift"; sourceTree = "<group>"; };
 		02A943C22962B1550045AF9E /* CustomMapItemAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapItemAnnotation.swift; sourceTree = "<group>"; };
@@ -42,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0245FF1C2963DDAB005DFBC9 /* JGProgressHUD in Frameworks */,
 				02BBF10329613F700008AEB6 /* LBTATools in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,6 +58,7 @@
 			children = (
 				02A943C62962BB600045AF9E /* DirectionsViewController.swift */,
 				0245FF1829631C4F005DFBC9 /* LocationSearchController.swift */,
+				0245FF1D2963EF13005DFBC9 /* RoutesController.swift */,
 			);
 			path = Directions;
 			sourceTree = "<group>";
@@ -119,6 +124,7 @@
 			name = TreasureMap;
 			packageProductDependencies = (
 				02BBF10229613F700008AEB6 /* LBTATools */,
+				0245FF1B2963DDAB005DFBC9 /* JGProgressHUD */,
 			);
 			productName = TreasureMap;
 			productReference = 02BBF0EA296133FB0008AEB6 /* TreasureMap.app */;
@@ -150,6 +156,7 @@
 			mainGroup = 02BBF0E1296133FB0008AEB6;
 			packageReferences = (
 				02BBF10129613F700008AEB6 /* XCRemoteSwiftPackageReference "LBTATools" */,
+				0245FF1A2963DDAB005DFBC9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 			);
 			productRefGroup = 02BBF0EB296133FB0008AEB6 /* Products */;
 			projectDirPath = "";
@@ -185,6 +192,7 @@
 				02BBF0F2296133FB0008AEB6 /* MainController.swift in Sources */,
 				02A943C72962BB600045AF9E /* DirectionsViewController.swift in Sources */,
 				02BBF0EE296133FB0008AEB6 /* AppDelegate.swift in Sources */,
+				0245FF1E2963EF13005DFBC9 /* RoutesController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,6 +404,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0245FF1A2963DDAB005DFBC9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		02BBF10129613F700008AEB6 /* XCRemoteSwiftPackageReference "LBTATools" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bhlvoong/LBTATools.git";
@@ -407,6 +423,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0245FF1B2963DDAB005DFBC9 /* JGProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0245FF1A2963DDAB005DFBC9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
+			productName = JGProgressHUD;
+		};
 		02BBF10229613F700008AEB6 /* LBTATools */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 02BBF10129613F700008AEB6 /* XCRemoteSwiftPackageReference "LBTATools" */;

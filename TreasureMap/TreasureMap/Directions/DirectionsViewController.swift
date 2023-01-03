@@ -2,6 +2,7 @@ import UIKit
 import LBTATools
 import MapKit
 import SwiftUI
+import JGProgressHUD
 
 class DirectionsViewController: UIViewController {
 
@@ -11,12 +12,44 @@ class DirectionsViewController: UIViewController {
     let startTextField = IndentedTextField(padding: 16, cornerRadius: 5)
     let endTextField = IndentedTextField(padding: 16, cornerRadius: 5)
     
+    var startMapItem: MKMapItem?
+    var endMapItem: MKMapItem?
+    
+    var currentlyShowingRoute: MKRoute?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBarUI()
         setupMap()
+        setupShowRouteButton()
     }
     
+    fileprivate func setupShowRouteButton() {
+        let showRouteButton = UIButton(
+            title: "Show Route",
+            titleColor: .black,
+            font: .boldSystemFont(ofSize: 16),
+            backgroundColor: .white,
+            target: self,
+            action: #selector(handleShowRoute))
+        
+        view.addSubview(showRouteButton)
+        
+        showRouteButton.anchor(
+            top: nil,
+            leading: view.leadingAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            trailing: view.trailingAnchor,
+            padding: .allSides(12),
+            size: .init(width: 0, height: 50))
+    }
+    
+    @objc fileprivate func handleShowRoute() {
+        guard let route = currentlyShowingRoute else { return }
+        let routesController = RoutesController()
+        routesController.items = route.steps.filter{!$0.instructions.isEmpty}
+        present(routesController, animated: true)
+    }
     fileprivate func setupMap() {
         view.addSubview(mapView)
         mapView.anchor(
@@ -27,29 +60,27 @@ class DirectionsViewController: UIViewController {
         mapView.delegate = self
         mapView.showsUserLocation = true
         setupRegionForMap()
-        setupStartEndDummyAnnotations()
-        requestForDirections()
     }
     
     fileprivate func requestForDirections() {
-        guard let first = mapView.annotations.first,
-        let last = mapView.annotations.last else {return}
         let request = MKDirections.Request()
         
-        let startingPlacemark = MKPlacemark(coordinate: first.coordinate)
-        request.source = .init(placemark: startingPlacemark)
-        
-        let endingPlacemark = MKPlacemark(coordinate: last.coordinate)
-        request.destination = .init(placemark: endingPlacemark)
-        request.transportType = .walking
+        request.source = startMapItem
+        request.destination = endMapItem
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Routing..."
+        hud.show(in: view)
+        request.transportType = .any
         let directions = MKDirections(request: request)
         directions.calculate { response, error in
+            hud.dismiss()
             if let error = error {
                 print("DEBUG: \(error.localizedDescription)")
                 return
             }
             guard let route = response?.routes.first else { return }
             self.mapView.addOverlay(route.polyline)
+            self.currentlyShowingRoute = route
         }
     }
     
@@ -96,14 +127,44 @@ class DirectionsViewController: UIViewController {
                             spacing: 16,
                             distribution: .fillEqually)
         .withMargins(.init(top: 0, left: 16, bottom: 12, right: 16))
-        
-        startTextField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleChangeStartLocation)))
+        startTextField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleChangeLocation)))
+        endTextField.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleChangeLocation)))
         navigationController?.navigationBar.isHidden = true
+        endTextField.tag = 1
     }
     
-    @objc fileprivate func handleChangeStartLocation() {
+    @objc fileprivate func handleChangeLocation(_ sender: UITapGestureRecognizer) {
         let vc = LocationSearchController()
+        vc.selectionHandler = { [weak self] item in
+            if sender.view?.tag == 1 {
+                self?.endTextField.text = item.name
+                self?.endMapItem = item
+            } else {
+                self?.startTextField.text = item.name
+                self?.startMapItem = item
+            }
+            self?.addAnnotations()
+        }
         navigationController?.pushViewController(vc, animated: true)
+    }
+    fileprivate func addAnnotations() {
+        mapView.removeAnnotations(mapView.annotations)
+        mapView.removeOverlays(mapView.overlays)
+        [startMapItem, endMapItem].forEach {
+            if let item = $0 {
+                addAnnotation(item)
+            }
+        }
+        guard startMapItem != nil, endMapItem != nil else { return }
+        requestForDirections()
+    }
+    
+    fileprivate func addAnnotation(_ item: MKMapItem) {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = item.placemark.coordinate
+        annotation.title = item.name
+        mapView.addAnnotation(annotation)
+        mapView.showAnnotations(mapView.annotations, animated: false)
     }
     
     @objc fileprivate func handleBack() {
