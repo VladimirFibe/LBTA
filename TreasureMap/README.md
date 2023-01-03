@@ -2,3 +2,4 @@
 
 [Receiving and Handling Events with Combine](https://developer.apple.com/documentation/combine/receiving-and-handling-events-with-combine)
 [JGProgressHUD](https://github.com/JonasGessner/JGProgressHUD)
+[Places SDK](https://developers.google.com/maps/documentation/places/ios-sdk)

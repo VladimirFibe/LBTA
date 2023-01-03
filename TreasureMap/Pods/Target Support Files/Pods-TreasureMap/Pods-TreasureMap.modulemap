@@ -1,0 +1,6 @@
+framework module Pods_TreasureMap {
+  umbrella header "Pods-TreasureMap-umbrella.h"
+
+  export *
+  module * { export * }
+}
