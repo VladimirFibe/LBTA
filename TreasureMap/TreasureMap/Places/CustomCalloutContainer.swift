@@ -1,10 +1,3 @@
-//
-//  CustomCalloutContainer.swift
-//  TreasureMap
-//
-//  Created by Vladimir Fibe on 1/4/23.
-//
-
 import UIKit
 
 class CustomCalloutContainer: UIView {
