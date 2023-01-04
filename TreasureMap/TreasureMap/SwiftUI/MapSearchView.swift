@@ -2,14 +2,14 @@ import SwiftUI
 import MapKit
 
 struct MapSearchView: View {
-    @State private var annotations = [MKPointAnnotation]()
+    @ObservedObject var viewModel = MapSearchViewModel()
     var body: some View {
         ZStack(alignment: .top) {
-            MapViewContainer(annotations: annotations)
+            MapViewContainer(annotations: viewModel.annotations)
                 .ignoresSafeArea()
             HStack {
                 Button(action: {
-                    performLocalSearch("sushi")
+                    viewModel.performLocalSearch("sushi")
                 }) {
                     Text("Search for Airports")
                         .frame(maxWidth: .infinity)
@@ -17,7 +17,7 @@ struct MapSearchView: View {
                         .background(Color.white)
                 }
                 Button(action: {
-                    annotations = []
+                    viewModel.removeLocations()
                 }) {
                     Text("Search for Airports")
                         .frame(maxWidth: .infinity)
@@ -27,28 +27,6 @@ struct MapSearchView: View {
             }
             .shadow(radius: 3)
             .padding()
-        }
-    }
-    
-    fileprivate func performLocalSearch(_ text: String) {
-        let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = text
-        let localSearch = MKLocalSearch(request: request)
-        localSearch.start { response, error in
-            if let error = error {
-                print("DEBUG: \(error.localizedDescription)")
-                return
-            }
-            var airports = [MKPointAnnotation]()
-            response?.mapItems.forEach({ mapItem in
-                let annotation = CustomMapItemAnnotation()
-                annotation.mapItem = mapItem
-                annotation.coordinate = mapItem.placemark.coordinate
-                annotation.title = "Location: " + (mapItem.name ?? "")
-                annotation.subtitle = mapItem.address
-                airports.append(annotation)
-            })
-            annotations = airports
         }
     }
 }
