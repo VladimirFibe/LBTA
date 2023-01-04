@@ -2,6 +2,7 @@ import UIKit
 import LBTATools
 import MapKit
 import GooglePlaces
+import JGProgressHUD
 
 class PlacesViewController: UIViewController {
 
@@ -30,6 +31,7 @@ class PlacesViewController: UIViewController {
     }
     
     fileprivate func setupSelectedAnnotationHUD() {
+        infoButton.addTarget(self, action: #selector(handleInformation), for: .primaryActionTriggered)
         view.addSubview(hudContainer)
         hudContainer.layer.cornerRadius = 5
         hudContainer.setupShadow(opacity: 0.2, radius: 5, offset: .zero, color: .darkGray)
@@ -38,6 +40,47 @@ class PlacesViewController: UIViewController {
         let topRow = UIView()
         topRow.hstack(hudNameLabel, infoButton.withWidth(44))
         hudContainer.stack(topRow, hudAddressLabel, hudTypesLabel, spacing: 8).withMargins(.allSides(16))
+    }
+    
+    @objc private func handleInformation() {
+        guard let placeAnnotation = mapView.selectedAnnotations.first as? PlaceAnnotation else { return }
+        
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Loading photos..."
+        hud.show(in: view)
+        
+        guard let placeId = placeAnnotation.place.placeID else { return }
+        client.lookUpPhotos(forPlaceID: placeId) {[weak self] list, error in
+            guard let self = self else { return }
+            if let error = error {
+                hud.dismiss()
+                print("DEBUG: \(error.localizedDescription)")
+                return
+            }
+            let dispatchGroup = DispatchGroup()
+            var images: [UIImage] = []
+            list?.results.forEach {
+                dispatchGroup.enter()
+                self.client.loadPlacePhoto($0) { image, error in
+                    dispatchGroup.leave()
+                    if let error = error {
+                        hud.dismiss()
+                        print("DEBUG: \(error.localizedDescription)")
+                        return
+                    }
+                    guard let image = image else { return }
+                    images.append(image)
+                }
+            }
+            dispatchGroup.notify(queue: .main) {
+                hud.dismiss()
+                let controller = PlacePhotosViewController()
+                controller.items = images
+                controller.title = placeAnnotation.title
+                print("DEBUG: \(controller.items.count)")
+                self.present(UINavigationController(rootViewController: controller), animated: true)
+            }
+        }
     }
     
     fileprivate func findNearbyPlaces() {
