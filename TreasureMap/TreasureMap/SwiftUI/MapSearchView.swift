@@ -1,37 +1,24 @@
 import SwiftUI
 import MapKit
 
-struct MapViewContainer: UIViewRepresentable {
-    let mapView = MKMapView()
-    func makeUIView(context: Context) -> MKMapView {
-        setupRegionForMap()
-        return mapView
-    }
-    func updateUIView(_ uiView: MKMapView, context: Context) {
-        
-    }
-    fileprivate func setupRegionForMap() {
-        let coordinateSanFrancisco = CLLocationCoordinate2D(latitude: 37.766610, longitude: -122.427290)
-        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-        let region = MKCoordinateRegion(center: coordinateSanFrancisco, span: span)
-        mapView.setRegion(region, animated: true)
-    }
-}
 struct MapSearchView: View {
-    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
-
+    @State private var annotations = [MKPointAnnotation]()
     var body: some View {
         ZStack(alignment: .top) {
-            MapViewContainer()
+            MapViewContainer(annotations: annotations)
                 .ignoresSafeArea()
             HStack {
-                Button(action: {}) {
+                Button(action: {
+                    performLocalSearch("sushi")
+                }) {
                     Text("Search for Airports")
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                         .background(Color.white)
                 }
-                Button(action: {}) {
+                Button(action: {
+                    annotations = []
+                }) {
                     Text("Search for Airports")
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
@@ -40,6 +27,28 @@ struct MapSearchView: View {
             }
             .shadow(radius: 3)
             .padding()
+        }
+    }
+    
+    fileprivate func performLocalSearch(_ text: String) {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = text
+        let localSearch = MKLocalSearch(request: request)
+        localSearch.start { response, error in
+            if let error = error {
+                print("DEBUG: \(error.localizedDescription)")
+                return
+            }
+            var airports = [MKPointAnnotation]()
+            response?.mapItems.forEach({ mapItem in
+                let annotation = CustomMapItemAnnotation()
+                annotation.mapItem = mapItem
+                annotation.coordinate = mapItem.placemark.coordinate
+                annotation.title = "Location: " + (mapItem.name ?? "")
+                annotation.subtitle = mapItem.address
+                airports.append(annotation)
+            })
+            annotations = airports
         }
     }
 }
