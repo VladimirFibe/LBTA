@@ -29,4 +29,21 @@ struct MapViewContainer: UIViewRepresentable {
         let region = MKCoordinateRegion(center: coordinateSanFrancisco, span: span)
         mapView.setRegion(region, animated: true)
     }
+    
+    class Coordinator: NSObject, MKMapViewDelegate {
+        init(mapView: MKMapView) {
+            super.init()
+            mapView.delegate = self
+        }
+        
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            let pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "id")
+            pinAnnotationView.canShowCallout = true
+            return pinAnnotationView
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(mapView: mapView)
+    }
 }
