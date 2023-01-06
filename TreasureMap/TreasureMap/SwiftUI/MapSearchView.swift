@@ -6,17 +6,38 @@ struct MapSearchView: View {
    
     var body: some View {
         ZStack(alignment: .top) {
-            MapViewContainer(annotations: viewModel.annotations)
+            MapViewContainer(selectedItem: viewModel.selectedItem,
+                             annotations: viewModel.annotations)
                 .ignoresSafeArea()
             VStack {
                 TextField("Search term", text: $viewModel.searchQuery)
                     .padding(12)
                     .background(Color.white)
                     .padding()
-                .shadow(radius: 3)
+                    .shadow(radius: 3)
                 Text(viewModel.isSearching ? "Searching..." : "")
                     .foregroundColor(.black)
                     .shadow(color: .white, radius: 2)
+                Spacer()
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(viewModel.mapItems, id: \.hash) { item in
+                            VStack(alignment: .leading) {
+                                Text(item.name ?? "")
+                                Text(item.address)
+                            }
+                            .padding()
+                            .frame(width: 200)
+                            .background(Color.white)
+                            .cornerRadius(10)
+                            .onTapGesture {
+                                viewModel.selectedItem = item
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                .shadow(radius: 5)
             }
         }
     }

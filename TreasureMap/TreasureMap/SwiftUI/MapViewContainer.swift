@@ -10,6 +10,7 @@ import MapKit
 
 struct MapViewContainer: UIViewRepresentable {
     let mapView = MKMapView()
+    var selectedItem: MKMapItem?
     var annotations: [MKPointAnnotation]?
     func makeUIView(context: Context) -> MKMapView {
         setupRegionForMap()
@@ -17,6 +18,7 @@ struct MapViewContainer: UIViewRepresentable {
     }
     func updateUIView(_ uiView: MKMapView, context: Context) {
         guard let annotations = annotations else { return }
+        #warning("Проверять чтоб дважды не перерисовывал анотации")
         uiView.removeAnnotations(uiView.annotations)
         uiView.addAnnotations(annotations)
         uiView.showAnnotations(uiView.annotations, animated: false)
