@@ -2,17 +2,19 @@ import SwiftUI
 import MapKit
 import Combine
 
-final class MapSearchViewModel: ObservableObject {
+final class MapSearchViewModel: NSObject, ObservableObject {
     @Published var annotations: [MKPointAnnotation] = []
     @Published var mapItems: [MKMapItem] = []
     @Published var isSearching = false
     @Published var searchQuery = ""
     @Published var selectedItem: MKMapItem?
     @Published var keyboardHeight = 0.0
-    
+    @Published var currentLocation = CLLocationCoordinate2D(latitude: 37.766610, longitude: -122.427290)
     private var bag = Set<AnyCancellable>()
     
-    init() {
+    let locationManager = CLLocationManager()
+    override init() {
+        super.init()
         $searchQuery
             .dropFirst()
             .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
@@ -21,6 +23,9 @@ final class MapSearchViewModel: ObservableObject {
                 self.performLocalSearch(searchTerm)
             }
             .store(in: &bag)
+        
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
         
         listenForKeyboardNotifications()
     }
@@ -77,5 +82,19 @@ final class MapSearchViewModel: ObservableObject {
             self.annotations = airports
             self.isSearching = false
         }
+    }
+}
+
+extension MapSearchViewModel: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if manager.authorizationStatus == .authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let firstLocation = locations.first else { return }
+        currentLocation = firstLocation.coordinate
+        manager.stopUpdatingLocation()
     }
 }

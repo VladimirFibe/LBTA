@@ -7,7 +7,7 @@ struct MapSearchView: View {
     var body: some View {
         ZStack(alignment: .top) {
             MapViewContainer(selectedItem: viewModel.selectedItem,
-                             annotations: viewModel.annotations)
+                             annotations: viewModel.annotations, currentLocation: viewModel.currentLocation)
                 .ignoresSafeArea()
             VStack {
                 TextField("Search term", text: $viewModel.searchQuery)
